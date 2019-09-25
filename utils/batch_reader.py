@@ -77,7 +77,7 @@ class ExtractiveBatcher(object):
 
         # Create bucketing threads
         self._bucketing_threads = []
-        for _ in xrange(max(1, len(filelist) / 2)):
+        for _ in range(max(1, len(filelist) / 2)):
             self._bucketing_threads.append(Thread(target=self._FillBucketInputQueue))
             self._bucketing_threads[-1].daemon = True
             self._bucketing_threads[-1].start()
@@ -122,7 +122,7 @@ class ExtractiveBatcher(object):
             extract_ids = data_sample.extract_ids
 
             # Content as enc_input
-            enc_input = [enc_vocab.GetIds(s) for s in document]
+            enc_input = [enc_vocab.get_ids(s) for s in document]
 
             # Filter out too-short input
             if len(enc_input) < hps.min_num_input_sents:
@@ -215,14 +215,14 @@ class ExtractiveBatcher(object):
         hps = self._hps
         while True:
             samples = []
-            for _ in xrange(hps.batch_size * BUCKET_NUM_BATCH):
+            for _ in range(hps.batch_size * BUCKET_NUM_BATCH):
                 samples.append(self._sample_queue.get())
 
             if self._bucketing:
                 samples = sorted(samples, key=lambda inp: inp.enc_doc_len)
 
             batches = []
-            for i in xrange(0, len(samples), hps.batch_size):
+            for i in range(0, len(samples), hps.batch_size):
                 batches.append(samples[i:i + hps.batch_size])
 
             if self._shuffle_batches:
@@ -255,7 +255,7 @@ class ExtractiveBatcher(object):
 
         return ExtractiveBatch(stacked_fields[0], stacked_fields[1],
                                stacked_fields[2], stacked_fields[3],
-                               stacked_fields[4], stacked_fields[5], \
+                               stacked_fields[4], stacked_fields[5],
                                (np_origin_inputs, np_origin_outputs, np_urls))
 
     def _WatchThreads(self):
