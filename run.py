@@ -3,8 +3,9 @@ import sys
 import numpy as np
 import tensorflow as tf
 from collections import namedtuple
+import json
 
-from utils import batch_reader, vocab, evaluate
+from utils import batch_reader, m_vocab, evaluate,vocab
 
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string("model", "", "The name of model runned.")
@@ -17,6 +18,7 @@ tf.app.flags.DEFINE_integer("output_vsize", 0,
                             "Number of words in output vocabulary.")
 tf.app.flags.DEFINE_string("ckpt_root", "", "Directory for checkpoint root.")
 tf.app.flags.DEFINE_string("summary_dir", "", "Directory for summary files.")
+tf.app.flags.DEFINE_string("word2id", "data/word2id.json", "Directory for w2id files.")
 tf.app.flags.DEFINE_string("mode", "train", "train/decode mode")
 tf.app.flags.DEFINE_integer("batch_size", 1,
                             "Size of minibatch. Beam size in decode mode.")
@@ -112,11 +114,16 @@ def main():
         raise ValueError("%s model NOT defined." % model_type)
     tf.logging.info("Using model %s." % model_type.upper())
 
+    with open(FLAGS.word2id) as f:
+        word2id = json.load(f)
+
     # Build vocabs
-    input_vocab = vocab.Vocab(FLAGS.input_vocab, FLAGS.input_vsize)
+    #input_vocab = m_vocab.Vocab(FLAGS.input_vocab, FLAGS.input_vsize)
+    input_vocab = vocab.Vocab(word2id=word2id)
 
     # Create model hyper-parameters
     hps = CreateHParams()
+
     tf.logging.info("Using the following hyper-parameters:\n%r" % str(hps))
 
     if FLAGS.mode == "train":

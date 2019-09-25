@@ -230,7 +230,7 @@ class SummaRuNNerRF(object):
                             tf.to_float(self._extract_targets),
                             axis=1)  # [batch_size] * num_sentences
 
-                        for i in xrange(hps.num_sentences):
+                        for i in range(hps.num_sentences):
                             cur_sent_vec = sentence_vecs_list[i]
                             cur_abs_pos = abs_pos_emb_list[i]
                             cur_rel_pos = rel_pos_emb_list[i]
@@ -257,7 +257,7 @@ class SummaRuNNerRF(object):
                         hist_summary_rl = tf.zeros_like(sentence_vecs_list[0])
                         extract_logit_rl_list, sampled_target_list = [], []
 
-                        for i in xrange(hps.num_sentences):
+                        for i in range(hps.num_sentences):
                             cur_sent_vec = sentence_vecs_list[i]
                             cur_abs_pos = abs_pos_emb_list[i]
                             cur_rel_pos = rel_pos_emb_list[i]
@@ -302,7 +302,7 @@ class SummaRuNNerRF(object):
 
     def _add_embeddings(self):
         hps = self._hps
-        input_vsize = self._input_vocab.NumIds
+        input_vsize = self._input_vocab.__len__()
 
         with tf.device(self._device_0):
             # Input word embeddings
@@ -622,7 +622,7 @@ class SummaRuNNerRF(object):
             # Run evaluation on validation set
             if step % flags.valid_freq == 0:
                 valid_losses = []
-                for _ in xrange(flags.num_valid_batch):
+                for _ in range(flags.num_valid_batch):
                     next_batch = valid_batcher.next()
                     valid_loss = self.run_eval_step(sess, next_batch)
                     valid_losses.append(valid_loss)
@@ -663,7 +663,7 @@ class SummaRuNNerRF(object):
             # Run evaluation on validation set
             if step % flags.valid_freq == 0:
                 valid_losses, valid_rewards = [], []
-                for _ in xrange(flags.num_valid_batch):
+                for _ in range(flags.num_valid_batch):
                     next_batch = valid_batcher.next()
                     valid_loss, valid_reward = self.run_eval_step(sess, next_batch)
                     valid_losses.append(valid_loss)
